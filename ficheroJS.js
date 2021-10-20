@@ -9,12 +9,14 @@ $(document).ready(function(){
 
 		$.ajax({
 
-			url:'informacion.php',
+			url:'PHP/registroZombie.php',
 			type:'POST',
-			data:{ opc },
+			data:{ nombreZombie, estadoZombie },
 			success: function(response){
 
 				respuestaServ = JSON.parse(response);
+				console.log(JSON.stringify(response));
+				Swal.fire(JSON.stringify(response));
 
 			}
 
