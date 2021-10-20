@@ -1,52 +1,51 @@
-$(document).ready(function(){
+<?php 
 
-	Swal.fire('Aviso', 'Cargando informacion', 'info');
+	require_once '../ConfigDB/conexion.php';	
+	header('Content-Type: application/json; charset=UTF-8');
 
-	console.clear();
-	let respuestaServ;	
+	if($_SERVER['REQUEST_METHOD'] == 'POST'){
+		
+		$query = "call obtenerTodo(); ";
+		$resultado = mysqli_query($conexion,$query);
 
-	$.ajax({
+		if($resultado){
 
-		url:'PHP/consultaZombie.php',
-		type:'POST',
-		success: function(response){
+			http_response_code(201);
 
-			respuestaServ = JSON.parse(response);
+			$json = array();
+			while($fila = mysqli_fetch_array($resultado)){
 
-			let template = `<h3 class="text-primary pb-5" align="center">Informacion de evaluados</h3>`;
-			template += `<table id="tablaDatos" class="display">`;
-			template += `<thead>`;
-			template += `<tr>`;				
-			template += `<th>Identificacion</th>`;
-			template += `<th>Nombres y apellidos</th>`;
-			template += `<th>EstadoC</th>`;
-			template += `<th>Fecha</th>`;
-			template += `</tr>`;
-			template += `</thead>`;
-			template += `<tbody>`;
+			$json[] = array(				
+				'id'=>$fila['id'],
+				'nombre'=>$fila['nombre'],
+				'estado'=>$fila['estado'],
+				'fecha'=>$fila['fecha']
+				);
+			}
 
-			respuestaServ.forEach(resp=>{
+			//conversion del array json a JSON String
+			$jsonCadena = json_encode($json); 
+			echo ($jsonCadena);
 
+		}else{
 
-				template += `<tr>`;										
-				template += `<td>${resp.id}</td>`;
-				template += `<td>${resp.nombre}</td>`;
-				template += `<td>${resp.estado}</td>`;
-				template += `<td>${resp.fecha}</td>`;
-				template += `<td>`;	
-				template += `</tr>`;
-
-					});
-
-			template += `</tbody>`;
-			template += `</table>`;
-
-			$('#contenedorTablasAll').html(template);
-			$('#tablaDatos').DataTable();
+			http_response_code(400);
+			$response['state']=false;
+        	$response['message']="Error al procesar la consulta";
+        	echo json_encode($response);
 
 		}
-				
 
-	});	
 
-});
+	}else{
+
+		http_response_code(405);
+		$response['state']=false;
+        $response['message']="Metodo HTTP no permitido";
+        echo json_encode($response);
+
+	}	
+    	
+    mysqli_close($conexion);
+
+?>
