@@ -1,4 +1,4 @@
-CREATE DEFINER=`henry`@`localhost` PROCEDURE `cantidadPorEstado`()
+CREATE DEFINER=`yael`@`localhost` PROCEDURE `cantidadPorEstado`()
 BEGIN
 	SELECT (SELECT CANT(estado) from zombie WHERE estado='desorientacion') as cantidadDesorientacion,
     (SELECT CANT(estado) from zombie WHERE estado='infeccion') as cantidadInfeccion,
