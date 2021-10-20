@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+	console.clear();
+	let respuestaServ;
+
 	$("#btnRegistro").on('click',(function(e) {
 
 		e.preventDefault();
@@ -13,14 +16,13 @@ $(document).ready(function(){
 			type:'POST',
 			data:{ nombreZombie, estadoZombie },
 			success: function(response){
-
 				respuestaServ = JSON.parse(response);
-				console.log(JSON.stringify(response));
-				Swal.fire(JSON.stringify(response));
-
 			}
+				
 
 		});	
+
+		Swal.fire('Respuesta', 'Operacion realizada', 'success')
 
 	}));
 
